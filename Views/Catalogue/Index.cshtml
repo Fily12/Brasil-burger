@@ -1,0 +1,24 @@
+@model IEnumerable<Brasil_BurgerC.Models.Burger>
+
+@{
+    ViewData["Title"] = "Catalogue des burgers";
+}
+
+<h2>Catalogue 🍔</h2>
+
+<div class="row">
+    @foreach (var burger in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="@burger.ImageUrl" class="card-img-top" alt="@burger.Nom" />
+                <div class="card-body">
+                    <h5 class="card-title">@burger.Nom</h5>
+                    <p class="card-text">@burger.Description</p>
+                    <p class="text-danger">@burger.Prix FCFA</p>
+                    <a asp-controller="Burger" asp-action="Details" asp-route-id="@burger.Id" class="btn btn-primary">Voir</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
