@@ -1,0 +1,24 @@
+@model Brasil_BurgerC.Models.Burger
+
+@{
+    ViewData["Title"] = "Détail du burger";
+}
+
+<div class="container mt-5">
+    <h2>@Model.Nom</h2>
+    <p class="lead">@Model.Description</p>
+    <h4 class="text-danger">@Model.Prix FCFA</h4>
+
+    <ul>
+        <li>Steak de bœuf 150g</li>
+        <li>Fromage cheddar</li>
+        <li>Salade</li>
+        <li>Tomate</li>
+        <li>Sauce Brasil</li>
+    </ul>
+
+    <form method="get" asp-controller="Commande" asp-action="Create">
+        <input type="hidden" name="burgerId" value="@Model.Id" />
+        <button type="submit" class="btn btn-success">Commander</button>
+    </form>
+</div>
