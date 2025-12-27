@@ -46,4 +46,20 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+// ⚠️ Création de l’utilisateur de test au démarrage
+using (var scope = app.Services.CreateScope())
+{
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+    var user = userManager.FindByEmailAsync("filythiaw0@gmail.com").GetAwaiter().GetResult();
+    if (user == null)
+    {
+        var newUser = new IdentityUser
+        {
+            UserName = "filythiaw0@gmail.com",
+            Email = "filythiaw0@gmail.com"
+        };
+        userManager.CreateAsync(newUser, "fily123").GetAwaiter().GetResult();
+    }
+}
+
 app.Run();
