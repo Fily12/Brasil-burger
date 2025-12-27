@@ -1,16 +1,20 @@
 namespace Brasil_BurgerC.Models
 {
     public class Commande
-    {
-        public int Id { get; set; }
-        public DateTime DateCommande { get; set; }
-        public decimal Total { get; set; }
+{
+    public int Id { get; set; }
+    public DateTime DateCommande { get; set; }
+    public decimal Total { get; set; }
 
-        public int ClientId { get; set; }
-        public Client Client { get; set; } = new Client();
+    // Relation avec Burger
+    public int BurgerId { get; set; }
+    public Burger Burger { get; set; }
 
-        public ICollection<Burger> Burgers { get; set; } = new List<Burger>();
-        public ICollection<Menu> Menus { get; set; } = new List<Menu>();
-        public Paiement Paiement { get; set; } = new Paiement();
-    }
+    // Mode de consommation
+    public string ModeConsommation { get; set; } = string.Empty;
+
+    // Paiement (simplifié en string pour éviter l’erreur)
+    public string Paiement { get; set; } = string.Empty;
+}
+
 }

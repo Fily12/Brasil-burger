@@ -1,8 +1,70 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Accueil";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- Section avec image de fond + voile sombre -->
+<div class="hero-section text-center text-white position-relative" 
+     style="background-image: url('~/images/background.png');
+            background-size: cover;
+            background-position: center;
+            padding: 120px 20px;">
+    
+    <!-- Voile sombre -->
+    <div class="overlay" 
+         style="position:absolute; inset:0; background:rgba(0,0,0,0.5);"></div>
+
+    <!-- Contenu par-dessus le voile -->
+    <div class="position-relative">
+        <h1 class="display-4">Brasil Burger 🍔</h1>
+        <p class="lead">Les meilleurs burgers de la ville</p>
+        <a asp-controller="Catalogue" asp-action="Index" class="btn btn-success btn-lg mt-3">Commander</a>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row mb-5">
+        <div class="col-md-12 d-flex justify-content-between align-items-center">
+            <h3>Burgers Populaires</h3>
+            <a asp-controller="Catalogue" asp-action="Index" class="text-danger">voir tout</a>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <img src="~/images/brasil-classic.png" class="card-img-top" alt="Brasil Classic" />
+                <div class="card-body">
+                    <h5 class="card-title">Brasil Classic</h5>
+                    <p class="card-text">Burger + légumes + steak, fromage, salade...</p>
+                    <p class="text-danger">4500 CFA</p>
+                    <a asp-controller="Burger" asp-action="Details" asp-route-id="1" class="btn btn-primary">Voir</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <img src="~/images/chicken-deluxe.png" class="card-img-top" alt="Chicken Deluxe" />
+                <div class="card-body">
+                    <h5 class="card-title">Chicken Deluxe</h5>
+                    <p class="card-text">Burger + légumes + steak, salade...</p>
+                    <p class="text-danger">4500 CFA</p>
+                    <a asp-controller="Burger" asp-action="Details" asp-route-id="2" class="btn btn-primary">Voir</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-12 d-flex justify-content-between align-items-center">
+            <h3>Menu du jour</h3>
+            <a href="#" class="text-danger">voir tout</a>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card bg-light p-3">
+                <h5 class="card-title">Menu Classic</h5>
+                <p>Burger + Frites + Boisson</p>
+                <p class="text-success">6000 FCFA</p>
+            </div>
+        </div>
+    </div>
 </div>
