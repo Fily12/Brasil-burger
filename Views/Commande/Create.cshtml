@@ -1,0 +1,43 @@
+@model Brasil_BurgerC.Models.Commande
+
+@{
+    ViewData["Title"] = "Nouvelle commande";
+}
+
+<h2>Compléments et options 🍟🥤</h2>
+
+<form asp-action="Create" method="post">
+    <input type="hidden" asp-for="Burger.Id" />
+
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Compléments</h4>
+            <div>
+                <input type="checkbox" name="supplements" value="Frites" /> Frites +1000 FCFA <br />
+                <input type="checkbox" name="supplements" value="Coca" /> Coca-Cola +500 FCFA <br />
+                <input type="checkbox" name="supplements" value="Sprite" /> Sprite +500 FCFA
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <h4>Mode de consommation</h4>
+            <div>
+                <input type="radio" name="modeConsommation" value="Sur place" checked /> Sur place <br />
+                <input type="radio" name="modeConsommation" value="À récupérer" /> À récupérer <br />
+                <input type="radio" name="modeConsommation" value="Livraison" /> Livraison
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <h4>Total : <span class="text-danger">@Model.Total FCFA</span></h4>
+
+    <h4>Payer par :</h4>
+    <div>
+        <input type="radio" name="paiement" value="Wave" checked /> Wave <br />
+        <input type="radio" name="paiement" value="Orange Money" /> Orange Money
+    </div>
+
+    <button type="submit" class="btn btn-success mt-3">Valider la commande</button>
+</form>
