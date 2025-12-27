@@ -1,0 +1,40 @@
+@model Brasil_BurgerC.Models.Commande
+
+@{
+    ViewData["Title"] = "Suivi de commande";
+}
+
+<h2>Suivi de votre commande 🛒</h2>
+
+<div class="timeline">
+    <div class="timeline-item">
+        <span class="status">✔️ Commande confirmée</span>
+        <small>@Model.DateCommande.ToString("dd-MM-yyyy HH:mm")</small>
+    </div>
+    <div class="timeline-item">
+        <span class="status">⚙️ Commande traitée</span>
+        <small>@Model.DateCommande.AddMinutes(2).ToString("dd-MM-yyyy HH:mm")</small>
+    </div>
+    <div class="timeline-item">
+        <span class="status">🚚 En cours de livraison</span>
+        <small>@Model.DateCommande.AddMinutes(10).ToString("dd-MM-yyyy HH:mm")</small>
+    </div>
+    <div class="timeline-item">
+        <span class="status">✅ Commande livrée</span>
+        <small>...</small>
+    </div>
+</div>
+
+<style>
+.timeline {
+    border-left: 3px solid #007bff;
+    margin: 20px;
+    padding-left: 20px;
+}
+.timeline-item {
+    margin-bottom: 15px;
+}
+.status {
+    font-weight: bold;
+}
+</style>
