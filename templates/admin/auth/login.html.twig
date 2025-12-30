@@ -1,0 +1,24 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block body %}
+  <div class="form-box">
+    <h2>Bienvenue</h2>
+
+    {% for message in app.flashes('error') %}
+      <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+
+    <form method="post">
+      <div class="mb-3">
+        <label class="form-label">Adresse email</label>
+        <input type="email" name="email" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Mot de passe</label>
+        <input type="password" name="password" class="form-control" required>
+      </div>
+      <button type="submit" class="btn btn-dark w-100">Connexion</button>
+      <a href="#" class="forgot-link">Mot de passe oublié ?</a>
+    </form>
+  </div>
+{% endblock %}
