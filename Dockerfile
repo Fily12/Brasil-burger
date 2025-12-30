@@ -1,42 +1,44 @@
 FROM php:8.3-apache
 
-# Activer mod_rewrite
+# 1. Activer mod_rewrite
 RUN a2enmod rewrite
 
-# Installer dépendances système
+# 2. Installer dépendances système
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Extensions PHP nécessaires
+# 3. Extensions PHP nécessaires
 RUN docker-php-ext-install pdo pdo_pgsql
 
-# Installer Composer
+# 4. Installer Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Copier le projet
+# 5. CONFIGURATION ENVIRONNEMENT (Important : Placé AVANT le build)
 WORKDIR /var/www/html
+ENV APP_ENV=prod
+ENV APP_DEBUG=0
+# Corrige l'erreur de "dubious ownership" vue dans vos logs
+RUN git config --global --add safe.directory /var/www/html
+
+# 6. Copier le projet
 COPY . /var/www/html
 
-# Installer uniquement les dépendances nécessaires en prod
+# 7. Installer les dépendances (Maintenant Symfony sait qu'il est en PROD)
 RUN composer install --no-dev --prefer-dist --optimize-autoloader
 
-# Nettoyer le cache et préparer les assets en mode prod
+# 8. Nettoyer le cache et préparer les assets
 RUN php bin/console cache:clear --env=prod
 RUN php bin/console assets:install public --env=prod
 
-# Config Apache pour pointer vers /public
+# 9. Config Apache pour pointer vers /public
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
-# Droits sur le dossier var
+# 10. Droits sur le dossier var
 RUN chown -R www-data:www-data /var/www/html/var
-
-# Variables d'environnement
-ENV APP_ENV=prod
-ENV APP_DEBUG=0
 
 EXPOSE 80
 
