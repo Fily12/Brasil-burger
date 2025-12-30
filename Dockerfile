@@ -33,9 +33,14 @@ RUN composer install --no-dev --prefer-dist --optimize-autoloader
 RUN php bin/console cache:clear --env=prod
 RUN php bin/console assets:install public --env=prod
 
-# 9. Config Apache pour pointer vers /public
+# 9. Config Apache pour pointer vers /public et autoriser les accès
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
-RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
+
+# Ajouter la directive Directory pour autoriser le .htaccess (Override)
+RUN echo "<Directory /var/www/html/public>\n\
+    AllowOverride All\n\
+    Require all granted\n\
+</Directory>" >> /etc/apache2/apache2.conf
 
 # 10. Droits sur le dossier var
 RUN chown -R www-data:www-data /var/www/html/var
