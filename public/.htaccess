@@ -1,0 +1,18 @@
+# Désactiver l'affichage du contenu des dossiers
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Si la requête n'est pas un fichier réel qui existe sur le disque...
+    RewriteCond %{REQUEST_FILENAME} !-f
+    # ...alors on redirige tout vers index.php
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+<IfModule !mod_rewrite.c>
+    <IfModule mod_alias.c>
+        # Si mod_rewrite n'est pas là, on utilise une redirection simple
+        RedirectMatch 302 ^/$ /index.php/
+    </IfModule>
+</IfModule>
