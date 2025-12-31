@@ -1,0 +1,35 @@
+{% extends 'admin/layout_admin.html.twig' %}
+
+{% block title %}Ajouter un burger{% endblock %}
+
+{% block body %}
+<div class="bg-white p-4 rounded shadow-sm">
+    <h2 class="mb-4">Ajouter un burger</h2>
+
+    {{ form_start(form) }}
+    
+    <div class="mb-3">
+        {{ form_label(form.nom, 'Nom du burger', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Classic Burger'}}) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 3, 'placeholder': 'Ingrédients et description'}}) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.prix, 'Prix (FCFA)', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.prix, {'attr': {'class': 'form-control', 'placeholder': '4500'}}) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.imageFile, 'Image du burger', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.imageFile, {'attr': {'class': 'form-control'}}) }}
+    </div>
+
+    <button class="btn btn-success mt-3">Enregistrer</button>
+    
+    {{ form_end(form) }}
+</div>
+{% endblock %}
