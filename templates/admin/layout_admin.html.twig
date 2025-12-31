@@ -1,73 +1,59 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>{% block title %}Admin — Brasil Burger{% endblock %}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      display: flex;
-      font-family: Arial, sans-serif;
-    }
-    .sidebar {
-      background-color: #1A1A1A;
-      color: white;
-      width: 220px;
-      height: 100vh;
-      position: fixed;
-      padding: 20px;
-    }
-    .sidebar ul {
-      list-style: none;
-      padding: 0;
-    }
-    .sidebar ul li {
-      padding: 10px;
-    }
-    .sidebar ul li.active {
-      background-color: #FFD700;
-    }
-    .sidebar ul li a {
-      color: inherit;
-      text-decoration: none;
-      display: block;
-    }
-    .main-content {
-      margin-left: 240px;
-      padding: 20px;
-      flex: 1;
-      background-color: #f9f9f9;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>{% block title %}Admin - Brasil Burger{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body { background-color: #f0f8ff; }
+        .sidebar {
+            background-color: #343a40;
+            min-height: 100vh;
+            padding-top: 20px;
+        }
+        .sidebar a {
+            color: #fff;
+            padding: 10px 15px;
+            display: block;
+            text-decoration: none;
+        }
+        .sidebar a:hover { background-color: #495057; }
+        .sidebar .active { background-color: #ffc107; color: #000; }
+        .avatar {
+            width: 80px; height: 80px; object-fit: cover;
+            border-radius: 50%; margin: 0 auto 10px; display: block;
+        }
+    </style>
 </head>
 <body>
-  <!-- Sidebar avec avatar -->
-  <aside class="sidebar">
-    <div style="text-align: center; margin-bottom: 20px;">
-      <img src="{{ asset('images/gestionnaire-avatar.png') }}" alt="Photo du gestionnaire"
-           style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;">
-      <h3 style="margin-top: 10px;">Gestionnaire</h3>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+<nav class="col-md-2 sidebar text-center">
+    <img src="{{ asset('images/gestionnaire-avatar.png') }}" alt="Gestionnaire" class="avatar">
+    <h5 class="text-white mb-4"> Gestionnaire</h5>
+    <nav class="col-md-2 sidebar text-center">
+    <a href="{{ path('admin_dashboard') }}">Tableau de bord</a>
+    <a href="{{ path('admin_burgers_index') }}">Burgers</a>
+    <a href="{{ path('admin_menus') }}">Menus</a>
+    <a href="{{ path('admin_complement') }}">Complément</a>
+    <a href="{{ path('admin_commandes') }}">Commandes</a>
+    <a href="{{ path('admin_livraison') }}">Livraison</a>
+    <a href="{{ path('admin_paiement') }}">Paiement</a>
+    <a href="{{ path('admin_parametres') }}">Paramètres</a>
+</nav>
+
+</nav>
+
+
+
+
+        <!-- Main content -->
+        <main class="col-md-10 p-4">
+            {% block body %}{% endblock %}
+        </main>
     </div>
-
-    <ul>
-      <li class="{% if app.request.attributes.get('_route') == 'admin_dashboard' %}active{% endif %}">
-        <a href="{{ path('admin_dashboard') }}">Tableau de bord</a>
-      </li>
-      <li><a href="#">Burgers</a></li>
-      <li><a href="#">Menus</a></li>
-      <li><a href="#">Complément</a></li>
-      <li><a href="#">Commande</a></li>
-      <li><a href="#">Livraison</a></li>
-      <li><a href="#">Paiement</a></li>
-      <li><a href="#">Paramètres</a></li>
-    </ul>
-  </aside>
-
-  <!-- Contenu principal -->
-  <main class="main-content">
-    {% block body %}{% endblock %}
-  </main>
+</div>
 </body>
 </html>
