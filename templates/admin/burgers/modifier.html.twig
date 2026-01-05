@@ -1,33 +1,37 @@
 {% extends 'admin/layout_admin.html.twig' %}
 
-{% block title %}Ajouter un Burger{% endblock %}
+{% block title %}Modifier Burger{% endblock %}
 
 {% block body %}
 <div class="bg-white p-4 rounded shadow-sm">
-    <h2 class="mb-4">Ajouter un Burger</h2>
+    <h2 class="mb-4">Modifier Burger : {{ burger.nom }}</h2>
 
     {{ form_start(form) }}
         <div class="mb-3">
             {{ form_label(form.nom, 'Nom du burger', {'label_attr': {'class': 'form-label'}}) }}
-            {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Classic Burger'}}) }}
+            {{ form_widget(form.nom, {'attr': {'class': 'form-control'}}) }}
         </div>
 
         <div class="mb-3">
             {{ form_label(form.description, 'Description', {'label_attr': {'class': 'form-label'}}) }}
-            {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 3, 'placeholder': 'Ingrédients et description'}}) }}
+            {{ form_widget(form.description, {'attr': {'class': 'form-control', 'rows': 3}}) }}
         </div>
 
         <div class="mb-3">
             {{ form_label(form.prix, 'Prix (FCFA)', {'label_attr': {'class': 'form-label'}}) }}
-            {{ form_widget(form.prix, {'attr': {'class': 'form-control', 'placeholder': '4500'}}) }}
+            {{ form_widget(form.prix, {'attr': {'class': 'form-control'}}) }}
         </div>
 
         <div class="mb-3">
             {{ form_label(form.imageFile, 'Image du burger', {'label_attr': {'class': 'form-label'}}) }}
             {{ form_widget(form.imageFile, {'attr': {'class': 'form-control'}}) }}
+            {% if burger.imageUrl %}
+                <p class="mt-2">Image actuelle :</p>
+                <img src="{{ burger.imagePath }}" alt="{{ burger.nom }}" width="120">
+            {% endif %}
         </div>
 
-        <button class="btn btn-success mt-3">Enregistrer</button>
+        <button class="btn btn-primary mt-3">Mettre à jour</button>
     {{ form_end(form) }}
 </div>
 {% endblock %}

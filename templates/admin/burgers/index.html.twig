@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Burgers{% endblock %}
+
+{% block body %}
+<h2 class="mb-4">Liste des Burgers</h2>
+
+<a href="{{ path('admin_burgers_ajouter') }}" class="btn btn-primary mb-3">+ Ajouter un burger</a>
+
+<table class="table table-bordered table-hover bg-white">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Description</th>
+            <th>Prix</th>
+            <th>Image</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for burger in burgers %}
+            <tr>
+                <td>{{ burger.id }}</td>
+                <td>{{ burger.nom }}</td>
+                <td>{{ burger.description }}</td>
+                <td>{{ burger.prix|number_format(0, ',', ' ') }} FCFA</td>
+                <td>
+                    {% if burger.imageUrl %}
+                        <img src="{{ asset('images/burgers/' ~ burger.imageUrl) }}"
+                             alt="{{ burger.nom }}"
+                             width="80"
+                             style="object-fit: cover; border-radius: 6px;">
+                    {% else %}
+                        <span>Aucune image</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
