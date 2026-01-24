@@ -1,0 +1,320 @@
+{% extends 'admin/layout_admin.html.twig' %}
+
+{% block title %}
+    {{ isEdit ? 'Modifier' : 'Créer' }} un menu
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    /* Style pour le formulaire */
+    .form-container {
+        max-width: 900px;
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-header {
+        margin-bottom: 30px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #28a745;
+    }
+
+    .form-header h1 {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #333;
+        margin: 0;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+        display: block;
+        font-size: 1rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 5px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+    }
+
+    .form-control:focus {
+        border-color: #28a745;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+    }
+
+    /* Checkboxes pour burgers et compléments */
+    .checkbox-group {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-top: 10px;
+    }
+
+    .checkbox-item {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        background: #f8f9fa;
+        border: 2px solid #e0e0e0;
+        border-radius: 5px;
+        transition: all 0.2s;
+    }
+
+    .checkbox-item:hover {
+        background: #e9ecef;
+        border-color: #28a745;
+    }
+
+    .checkbox-item input[type="checkbox"] {
+        margin-right: 10px;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
+
+    .checkbox-item label {
+        margin: 0;
+        font-weight: normal;
+        cursor: pointer;
+        flex: 1;
+    }
+
+    /* Boutons */
+    .form-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .btn-submit {
+        flex: 1;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 14px 20px;
+        border-radius: 5px;
+        font-weight: bold;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn-submit:hover {
+        background-color: #218838;
+    }
+
+    .btn-cancel {
+        flex: 1;
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        padding: 14px 20px;
+        border-radius: 5px;
+        font-weight: bold;
+        font-size: 1rem;
+        text-decoration: none;
+        text-align: center;
+        display: inline-block;
+        transition: background-color 0.3s;
+    }
+
+    .btn-cancel:hover {
+        background-color: #5a6268;
+        color: white;
+    }
+
+    .form-help {
+        font-size: 0.85rem;
+        color: #6c757d;
+        margin-top: 5px;
+        font-style: italic;
+    }
+
+    .form-error {
+        color: #dc3545;
+        font-size: 0.9rem;
+        margin-top: 5px;
+        font-weight: 500;
+    }
+
+    /* Aperçu de l'image actuelle */
+    .current-image-container {
+        margin-top: 10px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 5px;
+    }
+
+    .current-image {
+        max-width: 250px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .current-image-label {
+        display: block;
+        margin-top: 8px;
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    /* Section titre */
+    .section-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #28a745;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .checkbox-group {
+            grid-template-columns: 1fr;
+        }
+        
+        .form-actions {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="form-container mx-auto">
+        {# En-tête du formulaire #}
+        <div class="form-header">
+            <h1>
+                {% if isEdit %}
+                    📝 Modifier le menu : {{ menu.nom }}
+                {% else %}
+                    ➕ Créer un nouveau menu
+                {% endif %}
+            </h1>
+        </div>
+
+        {# Affichage des erreurs globales du formulaire #}
+        {% if not form.vars.valid %}
+            <div class="alert alert-danger">
+                <strong>Erreur :</strong> Veuillez corriger les erreurs ci-dessous.
+            </div>
+        {% endif %}
+
+        {# Formulaire Symfony #}
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+            {# === INFORMATIONS GÉNÉRALES === #}
+            <div class="section-title">📋 Informations générales</div>
+
+            {# Champ : Nom du menu #}
+            <div class="form-group">
+                {{ form_label(form.nom, 'Nom du menu *', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.nom, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Menu Brasil Classic'}}) }}
+                <div class="form-help">Donnez un nom descriptif à votre menu</div>
+                {% if form.nom.vars.errors|length > 0 %}
+                    <div class="form-error">{{ form_errors(form.nom) }}</div>
+                {% endif %}
+            </div>
+
+            {# Champ : Image du menu #}
+            <div class="form-group">
+                {{ form_label(form.imageFile, 'Image du menu', {'label_attr': {'class': 'form-label'}}) }}
+                
+                {# Affichage de l'image actuelle en mode édition #}
+                {% if isEdit and menu.image %}
+                    <div class="current-image-container">
+                        <img src="{{ asset(menu.imagePath) }}" 
+                             alt="Image actuelle" 
+                             class="current-image"
+                             onerror="this.src='/images/menus/default.jpg'">
+                        <span class="current-image-label">📸 Image actuelle : {{ menu.image }}</span>
+                    </div>
+                {% endif %}
+                
+                {{ form_widget(form.imageFile, {'attr': {'class': 'form-control'}}) }}
+                <div class="form-help">
+                    Formats acceptés : JPG, PNG (max 2 Mo). 
+                    Nommage recommandé : menu_brasil_classic.jpg
+                </div>
+                {% if form.imageFile.vars.errors|length > 0 %}
+                    <div class="form-error">{{ form_errors(form.imageFile) }}</div>
+                {% endif %}
+            </div>
+
+            {# === COMPOSITION DU MENU === #}
+            <div class="section-title">🍔 Composition du menu</div>
+
+            {# Champ : Burgers inclus #}
+            <div class="form-group">
+                {{ form_label(form.burgers, 'Burgers inclus dans le menu *', {'label_attr': {'class': 'form-label'}}) }}
+                <div class="form-help" style="margin-bottom: 10px;">
+                    Sélectionnez un ou plusieurs burgers pour composer votre menu
+                </div>
+                <div class="checkbox-group">
+                    {% for burger in form.burgers %}
+                        <div class="checkbox-item">
+                            {{ form_widget(burger) }}
+                            {{ form_label(burger, null, {'label_attr': {'class': ''}}) }}
+                        </div>
+                    {% endfor %}
+                </div>
+                {% if form.burgers.vars.errors|length > 0 %}
+                    <div class="form-error">{{ form_errors(form.burgers) }}</div>
+                {% endif %}
+            </div>
+
+            {# Champ : Compléments inclus #}
+            <div class="form-group">
+                {{ form_label(form.complements, 'Compléments inclus (frites, boissons) *', {'label_attr': {'class': 'form-label'}}) }}
+                <div class="form-help" style="margin-bottom: 10px;">
+                    Sélectionnez les accompagnements (frites, boissons) inclus dans le menu
+                </div>
+                <div class="checkbox-group">
+                    {% for complement in form.complements %}
+                        <div class="checkbox-item">
+                            {{ form_widget(complement) }}
+                            {{ form_label(complement, null, {'label_attr': {'class': ''}}) }}
+                        </div>
+                    {% endfor %}
+                </div>
+                {% if form.complements.vars.errors|length > 0 %}
+                    <div class="form-error">{{ form_errors(form.complements) }}</div>
+                {% endif %}
+            </div>
+
+            {# Boutons d'action #}
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                    {% if isEdit %}
+                        ✅ Enregistrer les modifications
+                    {% else %}
+                        ✅ Créer le menu
+                    {% endif %}
+                </button>
+                <a href="{{ path('admin_menus') }}" class="btn-cancel">
+                    ❌ Annuler
+                </a>
+            </div>
+
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

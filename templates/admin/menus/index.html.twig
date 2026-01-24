@@ -1,10 +1,254 @@
 {% extends 'admin/layout_admin.html.twig' %}
 
-{% block title %}Menus{% endblock %}
+{% block title %}Gestion des menus{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    /* Style pour la page de gestion des menus */
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .page-header h1 {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #333;
+        margin: 0;
+    }
+
+    .btn-add-menu {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-weight: bold;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-add-menu:hover {
+        background-color: #218838;
+        color: white;
+    }
+
+    /* Grille de cartes des menus (3 colonnes comme la maquette) */
+    .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+        margin-top: 20px;
+    }
+
+    /* Carte individuelle d'un menu */
+    .menu-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.2s;
+    }
+
+    .menu-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Image du menu */
+    .menu-card-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        background-color: #f8f9fa;
+    }
+
+    /* Corps de la carte */
+    .menu-card-body {
+        padding: 20px;
+    }
+
+    .menu-card-title {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .menu-card-description {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 12px;
+        min-height: 40px;
+    }
+
+    /* Prix du menu en ROUGE (comme sur la maquette) */
+    .menu-card-price {
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: #dc3545;
+        margin-bottom: 15px;
+    }
+
+    /* Boutons d'action */
+    .menu-card-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-modifier {
+        flex: 1;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        font-weight: 500;
+        text-decoration: none;
+        text-align: center;
+    }
+
+    .btn-modifier:hover {
+        background-color: #218838;
+        color: white;
+    }
+
+    .btn-archiver {
+        flex: 1;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .btn-archiver:hover {
+        background-color: #c82333;
+    }
+
+    /* Badge pour les menus archivés */
+    .badge-archive {
+        background-color: #6c757d;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 0.8rem;
+        margin-left: 10px;
+    }
+
+    /* Messages flash */
+    .alert {
+        margin-bottom: 20px;
+    }
+
+    /* Responsive : 2 colonnes sur tablette */
+    @media (max-width: 992px) {
+        .menu-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    /* Responsive : 1 colonne sur mobile */
+    @media (max-width: 576px) {
+        .menu-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
 
 {% block body %}
-<div class="bg-white p-4 rounded shadow-sm">
-    <h2 class="mb-4">Section Menus</h2>
-    <p>Contenu à venir…</p>
+<div class="container-fluid">
+    {# En-tête de la page #}
+    <div class="page-header">
+        <h1>Gestion des menus</h1>
+        <a href="{{ path('admin_menu_new') }}" class="btn-add-menu">
+            <span>+</span> Ajouter un menu
+        </a>
+    </div>
+
+    {# Messages flash (succès, erreurs) #}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+
+    {# Grille des menus (3 colonnes) #}
+    <div class="menu-grid">
+        {% for menu in menus %}
+            <div class="menu-card">
+                {# Image du menu #}
+                <img src="{{ asset(menu.imagePath) }}" 
+                     alt="{{ menu.nom }}" 
+                     class="menu-card-image"
+                     onerror="this.src='/images/menus/default.jpg'">
+
+                {# Corps de la carte #}
+                <div class="menu-card-body">
+                    {# Nom du menu #}
+                    <div class="menu-card-title">
+                        {{ menu.nom }}
+                        {% if menu.archive %}
+                            <span class="badge-archive">Archivé</span>
+                        {% endif %}
+                    </div>
+
+                    {# Description (liste des éléments du menu, tronquée) #}
+                    <div class="menu-card-description">
+                        {{ menu.description }}
+                    </div>
+
+                    {# Prix total du menu (calculé dynamiquement) en ROUGE #}
+                    <div class="menu-card-price">
+                        {{ menu.prixTotal|number_format(0, ',', ' ') }} CFA
+                    </div>
+
+                    {# Boutons d'action : Modifier (vert) et Archiver (rouge) #}
+                    <div class="menu-card-actions">
+                        {# Bouton Modifier (vert) #}
+                        <a href="{{ path('admin_menu_edit', {'id': menu.id}) }}" 
+                           class="btn-modifier">
+                            Modifier
+                        </a>
+
+                        {# Bouton Archiver/Désarchiver (rouge) #}
+                        <form method="post" 
+                              action="{{ path('admin_menu_archive', {'id': menu.id}) }}" 
+                              style="flex: 1; margin: 0;"
+                              onsubmit="return confirm('Êtes-vous sûr de vouloir {{ menu.archive ? 'désarchiver' : 'archiver' }} ce menu ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('archive' ~ menu.id) }}">
+                            <button type="submit" class="btn-archiver" style="width: 100%;">
+                                {{ menu.archive ? 'Désarchiver' : 'Archiver' }}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            {# Message si aucun menu n'existe #}
+            <div class="col-12 text-center py-5">
+                <p class="text-muted">Aucun menu n'a été créé pour le moment.</p>
+                <a href="{{ path('admin_menu_new') }}" class="btn btn-success">
+                    Créer le premier menu
+                </a>
+            </div>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

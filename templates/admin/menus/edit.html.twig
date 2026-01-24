@@ -1,0 +1,32 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Modifier Menu{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="page-header">
+        <h1>Modifier le menu #{{ id }}</h1>
+        <a href="{{ path('admin_menus') }}" class="btn btn-secondary">Retour</a>
+    </div>
+    
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                <div class="mb-3">
+                    <label class="form-label">Nom du menu</label>
+                    <input type="text" name="name" class="form-control" value="Burger Classic" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-control" rows="3">Burger traditionnel avec steak, salade, tomate</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Prix</label>
+                    <input type="number" name="price" class="form-control" step="0.01" value="12.50" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Modifier le menu</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

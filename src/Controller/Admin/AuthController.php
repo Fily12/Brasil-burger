@@ -6,18 +6,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class AuthController extends AbstractController
 {
-    #[Route('/admin/login', name: 'admin_login', methods: ['GET','POST'])]
-    public function login(Request $request): Response
+    #[Route('/login', name: 'login')]
+    public function login(Request $request, SessionInterface $session): Response
     {
         if ($request->isMethod('POST')) {
             $email = $request->request->get('email');
             $password = $request->request->get('password');
 
             if ($email === 'ahmadufall@gmail.com' && $password === 'ahmadu123') {
-                // Redirection vers le dashboard si identifiants corrects
+                $session->set('user_authenticated', true);
+                $session->set('user_email', $email);
                 return $this->redirectToRoute('admin_dashboard');
             }
 
@@ -27,9 +29,10 @@ class AuthController extends AbstractController
         return $this->render('admin/auth/login.html.twig');
     }
 
-    #[Route('/admin/logout', name: 'admin_logout', methods: ['POST'])]
-    public function logout(): void
+    #[Route('/logout', name: 'logout')]
+    public function logout(SessionInterface $session): Response
     {
-        // Géré plus tard par le firewall
+        $session->clear();
+        return $this->redirectToRoute('login');
     }
 }

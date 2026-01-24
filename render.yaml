@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: brasilburger
+    env: docker
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: APP_ENV
+        value: prod
+      - key: APP_DEBUG
+        value: "0"
+      - key: DATABASE_URL
+        value: postgresql://neondb_owner:npg_U1s6HMaQrDXx@ep-blue-cherry-a4a1dr1s-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require&options=endpoint%3Dep-blue-cherry-a4a1dr1s
+      - key: APP_SECRET
+        value: b1dc09b3ef04373c3fe221e4943d06a33234258eb6c274e896f24b434bae1700

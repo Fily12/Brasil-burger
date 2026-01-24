@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 #[Route('/admin', name: 'admin_')]
 class DashboardController extends AbstractController
@@ -12,13 +13,16 @@ class DashboardController extends AbstractController
     #[Route('', name: 'home')]
     public function home(): Response
     {
-        // Redirige automatiquement vers le tableau de bord
         return $this->redirectToRoute('admin_dashboard');
     }
 
     #[Route('/dashboard', name: 'dashboard')]
-    public function dashboard(): Response
+    public function dashboard(SessionInterface $session): Response
     {
+        if (!$session->get('user_authenticated')) {
+            return $this->redirectToRoute('login');
+        }
+
         return $this->render('admin/dashboard/index.html.twig');
     }
 }
