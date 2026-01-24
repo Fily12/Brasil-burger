@@ -3,10 +3,10 @@ FROM php:8.3-apache
 RUN a2enmod rewrite
 
 RUN apt-get update && apt-get install -y \
-    git unzip libpq-dev \
+    git unzip libpq-dev libicu-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install pdo pdo_pgsql
+RUN docker-php-ext-install pdo pdo_pgsql intl
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -14,14 +14,18 @@ WORKDIR /var/www/html
 
 COPY . .
 
+# Variables d'environnement nécessaires pour le build
+ENV APP_ENV=prod
+ENV APP_DEBUG=0
+ENV DEFAULT_URI=https://brasil-burger-manager.onrender.com
+ENV DATABASE_URL="postgresql://neondb_owner:npg_U1s6HMaQrDXx@ep-blue-cherry-a4a1dr1s-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require&options=endpoint%3Dep-blue-cherry-a4a1dr1s"
+ENV APP_SECRET=b1dc09b3ef04373c3fe221e4943d06a33234258eb6c274e896f24b434bae1700
+
 RUN composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction
 
 # Créer les dossiers nécessaires
 RUN mkdir -p var/cache var/log var/sessions
 RUN chmod -R 777 var/
-
-ENV APP_ENV=prod
-ENV APP_DEBUG=0
 
 # Configuration Apache pour Render
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
